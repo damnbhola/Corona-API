@@ -9,22 +9,17 @@ geocoder = OpenCageGeocode(key)
 app = Flask(__name__)
 
 
-def connect():
-    count = 10
-    for i in range(count):
-        try:
-            page = requests.get("https://bing.com/covid")
-            soup = BeautifulSoup(page.content, "html.parser")
-            data = soup.find("div").text[9:-1]
-            data = json.loads(data)
-            return data
-        except Exception as e:
-            print(e)
-            print(f"Connecting... {count}")
-    return {}
+try:
+    page = requests.get("https://bing.com/covid")
+    soup = BeautifulSoup(page.content, "html.parser")
+    data = soup.find("div").text[9:-1]
+    data = json.loads(data)
+except Exception as e:
+    print(e)
+    data = {}
 
 
-def find_country(data, cou):
+def find_country(cou):
     try:
         for loc in data["areas"]:
             if loc["id"] == cou:
@@ -36,39 +31,36 @@ def find_country(data, cou):
 
 @app.route('/location', methods=['GET'])
 def get_all_data():
-    data = connect()
     return jsonify({'data': data})
 
 
 @app.route('/location/<float:lat>/<float:long>', methods=['GET'])
 def get_data(lat, long):
-    data = connect()
-    if data:
-        try:
-            results = geocoder.reverse_geocode(lat, long)
-            country = results[0]["components"]["country"]
-            country_searched = find_country(data, country.lower())
-            if country_searched:
-                try:
-                    state = results[0]["components"]["state"]
-                    for state_searched in country_searched["areas"]:
-                        if state_searched["displayName"] == state:
-                            try:
-                                state_district = results[0]["components"]["state_district"]
-                                for district_searched in state_searched["areas"]:
-                                    if district_searched["displayName"] == state_district:
-                                        district_searched.pop("areas")
-                                        return jsonify(district_searched)
-                            except Exception as e:
-                                print(e)
-                                state_searched.pop("areas")
-                                return jsonify(state_searched)
-                except Exception as e:
-                    print(e)
-                    country_searched.pop("areas")
-                    return jsonify(country_searched)
-        except Exception as e:
-            print(e)
+    try:
+        results = geocoder.reverse_geocode(lat, long)
+        country = results[0]["components"]["country"]
+        country_searched = find_country(country.lower())
+        if country_searched:
+            try:
+                state = results[0]["components"]["state"]
+                for state_searched in country_searched["areas"]:
+                    if state_searched["displayName"] == state:
+                        try:
+                            state_district = results[0]["components"]["state_district"]
+                            for district_searched in state_searched["areas"]:
+                                if district_searched["displayName"] == state_district:
+                                    district_searched.pop("areas")
+                                    return jsonify(district_searched)
+                        except Exception as e:
+                            print(e)
+                            state_searched.pop("areas")
+                            return jsonify(state_searched)
+            except Exception as e:
+                print(e)
+                country_searched.pop("areas")
+                return jsonify(country_searched)
+    except Exception as e:
+        print(e)
     return jsonify({"message": "Not able to Locate."})
 
 
