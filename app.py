@@ -62,6 +62,3 @@ def get_data(lat, long):
     except Exception as e:
         print(e)
     return jsonify({"message": "Not able to Locate."})
-
-
-app.run()
