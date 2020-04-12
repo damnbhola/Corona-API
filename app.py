@@ -34,6 +34,13 @@ def get_all_data():
     return jsonify({'data': data})
 
 
+@app.route('/total', methods=['GET'])
+def get_world():
+    total = data.copy()
+    total["areas"] = []
+    return jsonify(total)
+
+
 @app.route('/location/<float:lat>/<float:long>', methods=['GET'])
 def get_data(lat, long):
     try:
@@ -56,6 +63,17 @@ def get_data(lat, long):
             except Exception as e:
                 print(e)
                 return jsonify(country_searched)
+    except Exception as e:
+        print(e)
+    return jsonify({"message": "Not able to Locate."})
+
+
+@app.route('/location/<string:country>', methods=['GET'])
+def get_country(country):
+    try:
+        country_searched = find_country(country.lower())
+        if country_searched:
+            return jsonify(country_searched)
     except Exception as e:
         print(e)
     return jsonify({"message": "Not able to Locate."})
