@@ -1,0 +1,5 @@
+opencage
+requests
+flask
+uwsgi
+beautifulsoup4==4.8.2
