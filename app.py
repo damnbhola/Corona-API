@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 
 try:
-    page = requests.get("https://bing.com/covid")
+    page = requests.get("https://bing.com/covid", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362"})
     soup = BeautifulSoup(page.content, "html.parser")
     data = soup.find("div").text[9:-1]
     data = json.loads(data)
@@ -49,15 +49,12 @@ def get_data(lat, long):
                             state_district = results[0]["components"]["state_district"]
                             for district_searched in state_searched["areas"]:
                                 if district_searched["displayName"] == state_district:
-                                    district_searched.pop("areas")
                                     return jsonify(district_searched)
                         except Exception as e:
                             print(e)
-                            state_searched.pop("areas")
                             return jsonify(state_searched)
             except Exception as e:
                 print(e)
-                country_searched.pop("areas")
                 return jsonify(country_searched)
     except Exception as e:
         print(e)
