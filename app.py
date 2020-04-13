@@ -58,8 +58,7 @@ def get_all_state():
                      "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
         try:
             for j in i["areas"]:
-                if j["displayName"] != "B\u016bshehr":
-                    continue
+                j["displayName"] = j["displayName"].replace("\", "")
                 temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
                              "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
         except Exception as e:
