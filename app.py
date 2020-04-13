@@ -67,7 +67,7 @@ def get_all_state():
 
 
 @app.route('/state_district', methods=['GET'])
-def get_all_state():
+def get_all_state_district():
     temp = []
     for i in data["areas"]:
         if not i["areas"]:
