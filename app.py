@@ -34,19 +34,34 @@ def get_all_data():
     return jsonify(data)
 
 
-@app.route('/world', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_world():
     temp = {"id": data["displayName"], "totalConfirmed": data["totalConfirmed"],
             "totalDeaths": data["totalDeaths"], "totalRecovered": data["totalRecovered"]}
     return jsonify(temp)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/country', methods=['GET'])
 def get_all_country():
     temp = []
     for i in data["areas"]:
         temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
                      "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
+    return jsonify(temp)
+
+
+@app.route('/state', methods=['GET'])
+def get_all_state():
+    temp = []
+    for i in data["areas"]:
+        temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
+                     "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
+        try:
+            for j in i["areas"]:
+                temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
+                             "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
+        except Exception as e:
+            print(e)
     return jsonify(temp)
 
 
