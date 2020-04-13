@@ -54,6 +54,9 @@ def get_all_country():
 def get_all_state():
     temp = []
     for i in data["areas"]:
+        if i["areas"]:
+            temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
+                        "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
         try:
             for j in i["areas"]:
                 temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
