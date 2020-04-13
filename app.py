@@ -66,6 +66,30 @@ def get_all_state():
     return jsonify(temp)
 
 
+@app.route('/state_district', methods=['GET'])
+def get_all_state():
+    temp = []
+    for i in data["areas"]:
+        if not i["areas"]:
+            temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
+                         "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
+        try:
+            for j in i["areas"]:
+                if not j["areas"]:
+                    temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
+                                 "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
+                try:
+                    for k in j["areas"]:
+                        temp.append({"id": k["displayName"], "totalConfirmed": k["totalConfirmed"],
+                                     "totalDeaths": k["totalDeaths"],
+                                     "totalRecovered": k["totalRecovered"], "lat": k["lat"], "long": k["long"]})
+                except Exception as e:
+                    print(e)
+        except Exception as e:
+            print(e)
+    return jsonify(temp)
+
+
 @app.route('/location/<float:lat>/<float:long>', methods=['GET'])
 def get_data(lat, long):
     try:
