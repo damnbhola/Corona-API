@@ -188,7 +188,6 @@ def get_state(country, state):
         if country_searched:
             try:
                 state = state.replace("_", " ")
-                state = state.replace(",", " ")
                 state = state.lower()
                 for state_searched in country_searched["areas"]:
                     st = state_searched["displayName"].lower()
@@ -237,14 +236,12 @@ def get_district(country, state, state_district):
         if country_searched:
             try:
                 state = state.replace("_", " ")
-                state = state.replace(",", "")
                 state = state.lower()
                 for state_searched in country_searched["areas"]:
                     st = state_searched["displayName"].lower()
                     if st == state:
                         try:
                             state_district = state_district.replace("_", " ")
-                            state_district = state_district.replace(",", "")
                             state_district = state_district.lower()
                             for district_searched in state_searched["areas"]:
                                 dist = district_searched["displayName"].lower()
