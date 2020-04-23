@@ -22,7 +22,8 @@ except Exception as e:
 def find_country(cou):
     try:
         for loc in data["areas"]:
-            if loc["id"] == cou:
+            c = loc['displayName'].lower()
+            if c == cou:
                 return loc
     except Exception as e:
         print(e)
@@ -95,7 +96,8 @@ def get_data(lat, long):
     try:
         results = geocoder.reverse_geocode(lat, long)
         country = results[0]["components"]["country"]
-        country_searched = find_country(country.lower())
+        country = country.lower()
+        country_searched = find_country(country)
         if country_searched:
             try:
                 state = results[0]["components"]["state"]
@@ -152,7 +154,8 @@ def get_data(lat, long):
 def get_country(country):
     try:
         country = country.replace("_", " ")
-        country_searched = find_country(country.lower())
+        country = country.lower()
+        country_searched = find_country(country)
         if country_searched:
             temp = [{"id": country_searched["displayName"], "totalConfirmed": country_searched["totalConfirmed"],
                      "totalDeaths": country_searched["totalDeaths"],
@@ -180,12 +183,15 @@ def get_country(country):
 def get_state(country, state):
     try:
         country = country.replace("_", " ")
-        country_searched = find_country(country.lower())
+        country = country.lower()
+        country_searched = find_country(country)
         if country_searched:
             try:
                 state = state.replace("_", " ")
+                state = state.lower()
                 for state_searched in country_searched["areas"]:
-                    if state_searched["displayName"] == state:
+                    st = state_searched["displayName"].lower()
+                    if st == state:
                         temp = [{"id": state_searched["displayName"],
                                  "totalConfirmed": state_searched["totalConfirmed"],
                                  "totalDeaths": state_searched["totalDeaths"],
@@ -225,16 +231,21 @@ def get_state(country, state):
 def get_district(country, state, state_district):
     try:
         country = country.replace("_", " ")
+        country = country.lower()
         country_searched = find_country(country.lower())
         if country_searched:
             try:
                 state = state.replace("_", " ")
+                state = state.lower()
                 for state_searched in country_searched["areas"]:
-                    if state_searched["displayName"] == state:
+                    st = state_searched["displayName"].lower()
+                    if st == state:
                         try:
                             state_district = state_district.replace("_", " ")
+                            state_district = state_district.lower()
                             for district_searched in state_searched["areas"]:
-                                if district_searched["displayName"] == state_district:
+                                dist = district_searched["displayName"].lower()
+                                if dist == state_district:
                                     temp = {"id": district_searched["displayName"],
                                             "totalConfirmed":  district_searched["totalConfirmed"],
                                             "totalDeaths": district_searched["totalDeaths"],
