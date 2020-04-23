@@ -25,6 +25,7 @@ def find_country(cou):
             c = loc['displayName'].lower()
             if c == cou:
                 return loc
+        raise Exception
     except Exception as e:
         print(e)
     return None
@@ -62,6 +63,7 @@ def get_all_state():
             for j in i["areas"]:
                 temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
                              "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
+            raise Exception
         except Exception as e:
             print(e)
     return jsonify(temp)
@@ -84,8 +86,10 @@ def get_all_state_district():
                         temp.append({"id": k["displayName"], "totalConfirmed": k["totalConfirmed"],
                                      "totalDeaths": k["totalDeaths"],
                                      "totalRecovered": k["totalRecovered"], "lat": k["lat"], "long": k["long"]})
+                    raise Exception
                 except Exception as e:
                     print(e)
+            raise Exception
         except Exception as e:
             print(e)
     return jsonify(temp)
@@ -113,6 +117,7 @@ def get_data(lat, long):
                                             "totalRecovered": district_searched["totalRecovered"],
                                             "lat": district_searched["lat"], "long": district_searched["long"]}
                                     return jsonify(temp)
+                            raise Exception
                         except Exception as e:
                             print(e)
                             temp = [{"id": state_searched["displayName"],
@@ -125,6 +130,7 @@ def get_data(lat, long):
                                              "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
                                              "lat": i["lat"], "long": i["long"]})
                             return jsonify(temp)
+                raise Exception
             except Exception as e:
                 print(e)
                 temp = [{"id": country_searched["displayName"], "totalConfirmed": country_searched["totalConfirmed"],
@@ -145,6 +151,7 @@ def get_data(lat, long):
                     except Exception as e:
                         print(e)
                 return jsonify(temp)
+        raise Exception
     except Exception as e:
         print(e)
     return jsonify({"message": "Not able to Locate."})
@@ -171,6 +178,7 @@ def get_country(country):
                             temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"],
                                          "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
                                          "lat": i["lat"], "long": i["long"]})
+                    raise Exception
                 except Exception as e:
                     print(e)
             return jsonify(temp)
@@ -202,6 +210,7 @@ def get_state(country, state):
                                          "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
                                          "lat": i["lat"], "long": i["long"]})
                         return jsonify(temp)
+                raise Exception
             except Exception as e:
                 print(e)
                 temp = [{"id": country_searched["displayName"], "totalConfirmed": country_searched["totalConfirmed"],
@@ -222,6 +231,7 @@ def get_state(country, state):
                     except Exception as e:
                         print(e)
                 return jsonify(temp)
+        raise Exception
     except Exception as e:
         print(e)
     return jsonify({"message": "Not able to Locate."})
@@ -252,6 +262,7 @@ def get_district(country, state, state_district):
                                             "totalRecovered": district_searched["totalRecovered"],
                                             "lat": district_searched["lat"], "long": district_searched["long"]}
                                     return jsonify(temp)
+                            raise Exception
                         except Exception as e:
                             print(e)
                             temp = [{"id": state_searched["displayName"],
@@ -264,6 +275,7 @@ def get_district(country, state, state_district):
                                              "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
                                              "lat": i["lat"], "long": i["long"]})
                             return jsonify(temp)
+                raise Exception
             except Exception as e:
                 print(e)
                 temp = [{"id": country_searched["displayName"], "totalConfirmed": country_searched["totalConfirmed"],
@@ -284,6 +296,7 @@ def get_district(country, state, state_district):
                     except Exception as e:
                         print(e)
                 return jsonify(temp)
+        raise Exception
     except Exception as e:
         print(e)
     return jsonify({"message": "Not able to Locate."})
