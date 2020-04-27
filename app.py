@@ -3,11 +3,12 @@ import requests
 from flask import Flask, jsonify
 import json
 from opencage.geocoder import OpenCageGeocode
+from flask_cors import CORS
 
 key = "db5e12475643479390239ad92a1f7698"
 geocoder = OpenCageGeocode(key)
 app = Flask(__name__)
-
+CORS(app)
 
 try:
     page = requests.get("https://bing.com/covid")
