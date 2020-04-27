@@ -1,5 +1,6 @@
 opencage
 requests
 flask
+flask-cors
 uwsgi
 beautifulsoup4==4.8.2
