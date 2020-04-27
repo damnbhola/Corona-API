@@ -59,11 +59,12 @@ def get_all_state():
     for i in data["areas"]:
         if not i["areas"]:
             temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
-                        "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
+                         "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
         try:
             for j in i["areas"]:
-                temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
-                             "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
+                temp.append(
+                    {"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
+                     "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
             raise Exception
         except Exception as e:
             print(e)
@@ -80,8 +81,9 @@ def get_all_state_district():
         try:
             for j in i["areas"]:
                 if not j["areas"]:
-                    temp.append({"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
-                                 "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
+                    temp.append(
+                        {"id": j["displayName"], "totalConfirmed": j["totalConfirmed"], "totalDeaths": j["totalDeaths"],
+                         "totalRecovered": j["totalRecovered"], "lat": j["lat"], "long": j["long"]})
                 try:
                     for k in j["areas"]:
                         temp.append({"id": k["displayName"], "totalConfirmed": k["totalConfirmed"],
@@ -98,34 +100,40 @@ def get_all_state_district():
 
 @app.route('/location/<float:lat>/<float:long>', methods=['GET'])
 def get_data(lat, long):
+    location = ""
     try:
         results = geocoder.reverse_geocode(lat, long)
         country = results[0]["components"]["country"]
+        location = country
         country = country.lower()
         country_searched = find_country(country)
         if country_searched:
             try:
                 state = results[0]["components"]["state"]
+                location = state
                 for state_searched in country_searched["areas"]:
                     if state_searched["displayName"] == state:
                         try:
                             state_district = results[0]["components"]["state_district"]
+                            location = state_district
                             for district_searched in state_searched["areas"]:
                                 if district_searched["displayName"] == state_district:
-                                    temp = {"id": district_searched["displayName"],
-                                            "totalConfirmed":  district_searched["totalConfirmed"],
-                                            "totalDeaths": district_searched["totalDeaths"],
-                                            "totalRecovered": district_searched["totalRecovered"],
-                                            "lat": district_searched["lat"], "long": district_searched["long"]}
+                                    temp = [{"id": district_searched["displayName"],
+                                             "totalConfirmed": district_searched["totalConfirmed"],
+                                             "totalDeaths": district_searched["totalDeaths"],
+                                             "totalRecovered": district_searched["totalRecovered"],
+                                             "lat": district_searched["lat"], "long": district_searched["long"],
+                                             "location": location}]
                                     return jsonify(temp)
                             raise Exception
                         except Exception as e:
                             print(e)
                             temp = [{"id": state_searched["displayName"],
-                                     "totalConfirmed":  state_searched["totalConfirmed"],
+                                     "totalConfirmed": state_searched["totalConfirmed"],
                                      "totalDeaths": state_searched["totalDeaths"],
                                      "totalRecovered": state_searched["totalRecovered"],
-                                     "lat": state_searched["lat"], "long": state_searched["long"]}]
+                                     "lat": state_searched["lat"], "long": state_searched["long"],
+                                     "location": location}]
                             for i in state_searched["areas"]:
                                 temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"],
                                              "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
@@ -137,7 +145,7 @@ def get_data(lat, long):
                 temp = [{"id": country_searched["displayName"], "totalConfirmed": country_searched["totalConfirmed"],
                          "totalDeaths": country_searched["totalDeaths"],
                          "totalRecovered": country_searched["totalRecovered"], "lat": country_searched["lat"],
-                         "long": country_searched["long"]}]
+                         "long": country_searched["long"], "location": location}]
                 for i in country_searched["areas"]:
                     temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"],
                                  "totalDeaths": i["totalDeaths"], "totalRecovered": i["totalRecovered"],
@@ -170,8 +178,9 @@ def get_country(country):
                      "totalRecovered": country_searched["totalRecovered"], "lat": country_searched["lat"],
                      "long": country_searched["long"]}]
             for i in country_searched["areas"]:
-                temp.append({"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
-                             "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
+                temp.append(
+                    {"id": i["displayName"], "totalConfirmed": i["totalConfirmed"], "totalDeaths": i["totalDeaths"],
+                     "totalRecovered": i["totalRecovered"], "lat": i["lat"], "long": i["long"]})
             else:
                 try:
                     for j in country_searched["areas"]:
@@ -258,7 +267,7 @@ def get_district(country, state, state_district):
                                 dist = district_searched["displayName"].lower()
                                 if dist == state_district:
                                     temp = {"id": district_searched["displayName"],
-                                            "totalConfirmed":  district_searched["totalConfirmed"],
+                                            "totalConfirmed": district_searched["totalConfirmed"],
                                             "totalDeaths": district_searched["totalDeaths"],
                                             "totalRecovered": district_searched["totalRecovered"],
                                             "lat": district_searched["lat"], "long": district_searched["long"]}
@@ -267,7 +276,7 @@ def get_district(country, state, state_district):
                         except Exception as e:
                             print(e)
                             temp = [{"id": state_searched["displayName"],
-                                     "totalConfirmed":  state_searched["totalConfirmed"],
+                                     "totalConfirmed": state_searched["totalConfirmed"],
                                      "totalDeaths": state_searched["totalDeaths"],
                                      "totalRecovered": state_searched["totalRecovered"],
                                      "lat": state_searched["lat"], "long": state_searched["long"]}]
